@@ -5,9 +5,11 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
-const port = 3001; // Changez ce port si nécessaire
+const port = process.env.PORT || 3000; // Port utilisé par Vercel ou 3000 par défaut
 
-app.use(express.static('public'));
+// Servir les fichiers statiques du dossier 'public'
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -68,6 +70,12 @@ app.post('/submit', upload.none(), (req, res) => {
     }
 });
 
+// Route pour la page d'accueil
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Démarrer le serveur sur le port fourni par Vercel ou 3000 par défaut
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
