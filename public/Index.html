@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pointage d'heures MSM</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="login-container" class="container">
+        <img src="LOGO MSM-1.png" alt="Logo de l'entreprise" class="logo">
+        <h1>Connexion</h1>
+        <form id="login-form">
+            <label for="username">ID :</label>
+            <input type="text" id="username" placeholder="ID" required>
+
+            <label for="password">Mot de passe :</label>
+            <input type="password" id="password" placeholder="Mot de passe" required>
+
+            <button type="submit" class="btn">Connexion</button>
+        </form>
+        <p id="error-message" style="color: red;"></p>
+    </div>
+
+    <div id="pointage-container" class="container" style="display: none;">
+        <h1>Pointage d'heures MSM</h1>
+        <form id="pointage-form">
+            <label for="worker-name">Nom d'intervenant :</label>
+            <input type="text" id="worker-name" name="workerName" required readonly>
+
+            <label for="date">Date :</label>
+            <input type="date" id="date" name="date" required>
+
+            <label for="start-time">Heure de début :</label>
+            <select id="start-time" name="startTime" required></select>
+
+            <label for="end-time">Heure de fin :</label>
+            <select id="end-time" name="endTime" required></select>
+
+            <label for="worker-code">Code intervenant :</label>
+            <input type="text" id="worker-code" name="workerCode" required readonly>
+
+            <label for="material-code">Code matériel :</label>
+            <input type="text" id="material-code" name="materialCode" required readonly>
+
+            <label for="duration-done">Durée réalisée :</label>
+            <input type="text" id="duration-done" name="durationDone" required readonly>
+
+            <label for="project-code">Code du chantier :</label>
+            <input type="text" id="project-code" name="projectCode" placeholder="X-00-X-00" required pattern="[A-Z]-\d{2}-[A-Z]-\d{2}" title="Le format doit être X-00-X-00, où X est une lettre majuscule et 00 est un chiffre à deux chiffres">
+        
+
+            <label for="include">Inclure les coûts dans l'analyse (Affaire)</label>
+            <input type="text" id="include" name="include" required readonly>
+
+            <label for="notes">Notes :</label>
+            <input type="text" id="notes" name="notes">
+
+            <label for="planned-duration">Durée prévue - Durée en heures</label>
+            <input type="text" id="planned-duration" name="plannedDuration" required readonly>
+
+            <button type="submit">Envoyer</button>
+        </form>
+        <span id="msg"></span>
+        <button id="logout-button" onclick="logout()">Déconnexion</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
