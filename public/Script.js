@@ -1,13 +1,14 @@
 // script.js
 
+// Hachages des mots de passe au lieu des mots de passe en clair
 const users = {
-    benjamin: { password: 'BenMSM12', fullName: 'Benjamin Corbeau', code: 'IT00012' },
-    bruno: { password: 'BrunoMSM05', fullName: 'Bruno Minier', code: 'IT00005' },
-    corentin: { password: 'CorentinMSM04', fullName: 'Corentin Damange', code: 'IT00004' },
-    damien: { password: 'DamienMSM03', fullName: 'Damien Corbeau', code: 'IT00003' },
-    quentin: { password: 'QuentinMSM07', fullName: 'Quentin Boursaud', code: 'IT00007' },
-    john: { password: 'JohnMSM28', fullName: 'John Coutant', code: 'IT00028' },
-    archimed: { password: 'ArchimedMSM13', fullName: 'Archimed Imane', code: 'IT00013' },
+    benjamin: { password: '952e5cef06b51e5315dc5fa7fc00ab76a652f9762e830e6b3deaf7a71287332f', fullName: 'Benjamin Corbeau', code: 'IT00012' },
+    bruno: { password: '3cc25ca2c747d34880dab449478a015c7a55a1efa0eff79c83ab05018632fc84', fullName: 'Bruno Minier', code: 'IT00009' },
+    corentin: { password: '5a3b5e303d733ce7087d54d5b8c71261ef0d4037a3a18d4026e5c9cdb19fa6bc', fullName: 'Corentin Damange', code: 'IT00004' },
+    damien: { password: 'e1a8a7b7b1ec7e75d6e1e028b5e40c0f462d84f35ad1ed0ae12dfc4c445a1b56', fullName: 'Damien Corbeau', code: 'IT00003' },
+    quentin: { password: '9c21914e1e09d6e134243f8baf6f08a1df5ae06a913a91f3af76413ae65041d5', fullName: 'Quentin Boursaud', code: 'IT00007' },
+    john: { password: '2abdd12ae86e945d7c495f3cdd2de7b3995f93fd67e1b9ab31c21c3ed92a405a', fullName: 'John Coutant', code: 'IT00028' },
+    archimed: { password: '39f37e3bce1f5e76b9b519d4ab1637cc091acbc5862db9491af5bb71587b93db', fullName: 'Archimed Imane', code: 'IT00013' },
 };
 
 let currentUser = null;
@@ -16,8 +17,9 @@ document.getElementById('login-form').addEventListener('submit', function (e) {
     e.preventDefault();
     const username = document.getElementById('username').value.toLowerCase();
     const password = document.getElementById('password').value;
+    const hashedPassword = CryptoJS.SHA256(password).toString(); // Hachage du mot de passe entré
 
-    if (users[username] && users[username].password === password) {
+    if (users[username] && users[username].password === hashedPassword) {
         // Connexion réussie
         currentUser = users[username];
         document.getElementById('login-container').style.display = 'none';
@@ -27,6 +29,7 @@ document.getElementById('login-form').addEventListener('submit', function (e) {
         document.getElementById('include').value = '1'; // Valeur par défaut
         document.getElementById('planned-duration').value = '3,5'; // Valeur par défaut
         populateTimeOptions(); // Générer les options de temps
+        populateProjectCodeOptions(); // Générer les options de codes de chantier
     } else {
         // Erreur de connexion
         document.getElementById('error-message').innerText = 'ID ou mot de passe incorrect';
@@ -42,7 +45,7 @@ function populateStartTimeOptions() {
     const startTimeSelect = document.getElementById('start-time');
     startTimeSelect.innerHTML = '';
 
-    const startTimes = generateTimeOptions(5, 0, 15, 0, 15);
+    const startTimes = generateTimeOptions(5, 0, 14, 0, 15);
     startTimes.forEach(time => {
         const option = new Option(time, time);
         startTimeSelect.add(option);
@@ -103,55 +106,89 @@ function calculateDuration() {
     }
 }
 
-document.getElementById('pointage-form').addEventListener('submit', function (e) {
-    e.preventDefault();
+function formatDateAndTime(date, time) {
+    const [year, month, day] = date.split('-');
+    return `${day}/${month}/${year}  ${time}`;
+}
 
-    const workerName = document.getElementById('worker-name').value;
-    const workDate = document.getElementById('date').value;
+function populateProjectCodeOptions() {
+    const projectCodeSelect = document.getElementById('project-code');
+    projectCodeSelect.innerHTML = '';
+
+    // Liste des codes de chantier avec leurs noms
+    const projectCodes = [
+        { code: 'P-24-X-13', name: 'Selecom' },
+        { code: 'P-24-X-12', name: 'Mouvaux' },
+        { code: 'P-24-T-12', name: 'xSO - Montel Gelat' },
+        { code: 'P-24-T-11', name: 'xSO Pontarion' },
+        { code: 'P-24-T-10', name: 'xSO - Mimizan - RAL 7004' },
+        { code: 'P-24-P-03', name: 'SNCF - Carignan' },
+        { code: 'P-24-X-09', name: 'Cornille les Cave' },
+        { code: 'P-24-R-02', name: 'SNCF - Anglefort' },
+        { code: 'P-24-X-02', name: 'VDR - st blaise' },
+        { code: 'P-24-X-01', name: 'UPS - Nantes' },
+        { code: 'P-24-T-08', name: 'xSO - Tramain - Bardage bois' },
+        { code: 'P-24-T-02B', name: 'xSO Bourg equipements' },
+        { code: 'P-24-T-02', name: 'xSO - Bourg' },
+        { code: 'P-24-T-01B', name: 'xSO - saverne Equipements' },
+        { code: 'P-24-T-01', name: 'xSO Saverne - shelter' },
+        { code: 'P-23-T-18', name: 'SOp - Métal Précommande 2' },
+        { code: 'P-23-T-17', name: 'SOp - Metal - précommande 1' },
+    ];
+
+    projectCodes.forEach(({ code, name }) => {
+        const option = new Option(`${code} : ${name}`, code);
+        projectCodeSelect.add(option);
+    });
+
+    projectCodeSelect.addEventListener('change', function () {
+        const selectedOption = projectCodeSelect.options[projectCodeSelect.selectedIndex];
+        projectCodeSelect.value = selectedOption.value; // Garde seulement le code lors de la sélection
+    });
+}
+
+const form = document.forms['submit-to-google-sheet'];
+const messageStatus = document.getElementById("msg");
+
+form.addEventListener('submit', e => {
+    e.preventDefault();
+    console.log("Form submitted");
+
+    const date = document.getElementById('date').value;
     const startTime = document.getElementById('start-time').value;
     const endTime = document.getElementById('end-time').value;
-    const workerCode = document.getElementById('worker-code').value;
-    const materialCode = document.getElementById('material-code').value;
-    const durationDone = document.getElementById('duration-done').value;
-    const projectCode = document.getElementById('project-code').value;
-    const includeCost = document.getElementById('include').value;
-    const notes = document.getElementById('notes').value;
-    const plannedDuration = document.getElementById('planned-duration').value;
 
-    const formData = new FormData();
-    formData.append('workerName', workerName);
-    formData.append('date', workDate);
-    formData.append('startTime', startTime);
-    formData.append('endTime', endTime);
-    formData.append('workerCode', workerCode);
-    formData.append('materialCode', materialCode);
-    formData.append('durationDone', durationDone);
-    formData.append('projectCode', projectCode);
-    formData.append('include', includeCost);
-    formData.append('notes', notes);
-    formData.append('plannedDuration', plannedDuration);
+    if (date && startTime && endTime) {
+        const formattedStartTime = formatDateAndTime(date, startTime);
+        const formattedEndTime = formatDateAndTime(date, endTime);
 
-    fetch('/submit', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById('msg').innerText = data.message;
-        setTimeout(() => document.getElementById('msg').innerText = '', 5000);
-        this.reset();
-        // Réinitialiser les valeurs
-        if (currentUser) {
-            document.getElementById('worker-name').value = currentUser.fullName;
-            document.getElementById('worker-code').value = currentUser.code;
-            document.getElementById('include').value = '1';
-            document.getElementById('planned-duration').value = '3,5';
-        }
-    })
-    .catch(error => {
-        console.error('Error!', error.message);
-        document.getElementById('msg').innerText = 'Erreur lors de l\'enregistrement des données.';
-    });
+        const formData = new FormData(form);
+        formData.set('Début', formattedStartTime);
+        formData.set('Fin', formattedEndTime);
+
+        fetch('https://script.google.com/macros/s/AKfycbxSJSF7Q2CjPSKnNI3LMny8Tc9fy28GzG04KHgAKwgAFbQ0TGm_JZ4NjQ4Xpw2Ajeji4g/exec', { method: 'POST', body: formData })
+            .then(response => {
+                console.log("Form sent successfully", response);
+                messageStatus.innerHTML = "Message envoyé avec succès !"
+                setTimeout(function () {
+                    messageStatus.innerHTML = ""
+                }, 5000)
+                form.reset();
+                // Réinitialiser les valeurs
+                if (currentUser) {
+                    document.getElementById('worker-name').value = currentUser.fullName;
+                    document.getElementById('worker-code').value = currentUser.code;
+                    document.getElementById('include').value = '1';
+                    document.getElementById('planned-duration').value = '3,5';
+                }
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+                messageStatus.innerHTML = "Erreur lors de l'envoi du message."
+            });
+    } else {
+        messageStatus.innerHTML = "Veuillez remplir tous les champs requis.";
+    }
 });
 
 function logout() {

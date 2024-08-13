@@ -3,14 +3,16 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pointage d'heures MSM</title>
+    <title>Pointage d'heures de travail</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/0ddf7b2360.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
 </head>
 
 <body>
     <div id="login-container" class="container">
-        <img src="LOGO MSM-1.png" alt="Logo de l'entreprise" class="logo">
         <h1>Connexion</h1>
         <form id="login-form">
             <label for="username">ID :</label>
@@ -25,43 +27,43 @@
     </div>
 
     <div id="pointage-container" class="container" style="display: none;">
-        <h1>Pointage d'heures MSM</h1>
-        <form id="pointage-form">
+        <h1>Pointage d'heures de travail</h1>
+        <form name="submit-to-google-sheet">
             <label for="worker-name">Nom d'intervenant :</label>
-            <input type="text" id="worker-name" name="workerName" required readonly>
+            <input type="text" id="worker-name" name="Libellé" placeholder="Nom d'intervenant" readonly required>
 
             <label for="date">Date :</label>
-            <input type="date" id="date" name="date" required>
+            <input type="date" id="date" name="Date" required>
 
             <label for="start-time">Heure de début :</label>
-            <select id="start-time" name="startTime" required></select>
+            <select id="start-time" name="Début" required></select>
 
             <label for="end-time">Heure de fin :</label>
-            <select id="end-time" name="endTime" required></select>
+            <select id="end-time" name="Fin" required></select>
 
             <label for="worker-code">Code intervenant :</label>
-            <input type="text" id="worker-code" name="workerCode" required readonly>
+            <input type="text" id="worker-code" name="Code intervenant" placeholder="Code intervenant" readonly required>
 
             <label for="material-code">Code matériel :</label>
-            <input type="text" id="material-code" name="materialCode" required readonly>
+            <input type="text" id="material-code" name="Code matériel" placeholder="Code matériel" readonly required>
 
             <label for="duration-done">Durée réalisée :</label>
-            <input type="text" id="duration-done" name="durationDone" required readonly>
+            <input type="text" id="duration-done" name="Durée réalisée" placeholder="Durée réalisée" readonly required>
 
             <label for="project-code">Code du chantier :</label>
-            <input type="text" id="project-code" name="projectCode" placeholder="X-00-X-00" required pattern="[A-Z]-\d{2}-[A-Z]-\d{2}" title="Le format doit être X-00-X-00, où X est une lettre majuscule et 00 est un chiffre à deux chiffres">
-        
+            <select id="project-code" name="Code du chantier" required>
+            </select>
 
-            <label for="include">Inclure les coûts dans l'analyse (Affaire)</label>
-            <input type="text" id="include" name="include" required readonly>
+            <label for="include">Inclure :</label>
+            <input type="text" id="include" name="Inclure les coûts dans l'analyse (Affaire)" placeholder="Inclure les coûts dans l'analyse (Affaire)" readonly required>
 
             <label for="notes">Notes :</label>
-            <input type="text" id="notes" name="notes">
+            <input type="text" id="notes" name="Notes en texte" placeholder="Notes">
 
-            <label for="planned-duration">Durée prévue - Durée en heures</label>
-            <input type="text" id="planned-duration" name="plannedDuration" required readonly>
+            <label for="planned-duration">Durée prévue :</label>
+            <input type="text" id="planned-duration" name="Durée prévue - Durée en heures" placeholder="Durée prévue - Durée en heures" readonly required>
 
-            <button type="submit">Envoyer</button>
+            <button type="submit" class="btn">Envoyer</button>
         </form>
         <span id="msg"></span>
         <button id="logout-button" onclick="logout()">Déconnexion</button>
