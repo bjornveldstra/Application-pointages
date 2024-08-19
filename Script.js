@@ -172,7 +172,7 @@ form.addEventListener('submit', e => {
                 messageStatus.innerHTML = "Message envoyé avec succès !"
                 setTimeout(function () {
                     messageStatus.innerHTML = ""
-                }, 5000)
+                }, 1000)
                 form.reset();
                 // Réinitialiser les valeurs
                 if (currentUser) {
